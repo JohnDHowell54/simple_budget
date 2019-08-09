@@ -62,8 +62,6 @@ int main()
 	printf("You can also take leftover as %d$ per week\n", leftweek); 
 	printf("Or alternatively $%d per day\n", leftday);
 
-//	printf("You entered:%d\n", a);
-
 	
 	return 0;
 
