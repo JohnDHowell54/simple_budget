@@ -17,7 +17,8 @@ int main()
 	int leftover;
 	int leftweek;
 	int leftday;
-
+	int affRent;
+	
 	//get monthly income
 	printf("Enter your total monthly income\n");
 
@@ -47,7 +48,7 @@ int main()
 	leftover = income - (rent + internet + electric + debt + savings + groceries);
 	leftweek = leftover/4;
 	leftday = leftover/30;
-
+	affRent = income * .3;
 
 	printf("\n#####################################\n");
 	printf("Totals\n");
@@ -62,6 +63,18 @@ int main()
 	printf("You can also take leftover as %d$ per week\n", leftweek); 
 	printf("Or alternatively $%d per day\n", leftday);
 
+	printf("\n#####################################\n");
+	printf("Additional Notes\n");
+	printf("#####################################\n");
+	if (affRent >= rent)
+	{
+		printf("Based on your income, you can afford your rent!\n");
+	}	
+	else 
+	{
+		printf("Uh oh! Your rent/mortgage is more than 1/3rd of your income! You should try to lower it\n");
+	}
+	
 	
 	return 0;
 
