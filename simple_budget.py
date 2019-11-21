@@ -22,4 +22,4 @@ leftovers = [leftover, leftday]
 affrent = income * .3
 
 for expense in expenses:
-    print(expense.name + ": " + expense)
+    print(expense)
