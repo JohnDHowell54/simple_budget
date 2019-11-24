@@ -3,6 +3,7 @@ import csv
 import sys
 import json
 
+
 def calcBudget():
     print("Welcome to John's Simple Budget. Please note that in rent I have bundled "
           "water, trash, and sewage as that is how my personal situation is set up.\n")
@@ -28,24 +29,21 @@ def calcBudget():
 
     leftovers = [leftover, leftday]
 
-    affrent = income * .3
+    affrent = income * .33
 
+    if affrent > rent:
+        print(
+            "Uh oh! Looks like rent is more than 1/3rd of your monthly income. That is generally considered unafforable")
+    else:
+        print("Congratulations, you can afford your rent!")
 
-# Print our expenses
-for key, val in expenses.items():
-    print(key, ':', val)
-
-# TODO Fix this calculation, doesn't properly work
-if affrent > rent:
-    print("Uh oh! Looks like rent is more than 1/3rd of your monthly income. That is generally considered unafforable")
-else:
-    print("Congratulations, you can afford your rent!")
-
-
-# TODO have budgets be persistent
-with open('budget.json', 'w') as fp:
-    json.dump(expenses, fp, indent=4, sort_keys=True)
+    with open('budget.json', 'w') as fp:
+        json.dump(expenses, fp, indent=4, sort_keys=True)
 
 # TODO have options to load a budget, save a budget
 
 # TODO have option to export to .tsv 
+
+
+if __name__ == '__main__':
+    calcBudget()
