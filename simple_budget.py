@@ -1,13 +1,31 @@
-import math
-import csv
 import sys
 import json
+import getopt
 
 
-def calcBudget():
+def main():
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "hlc:v]", ["help"])
+    except getopt.GetoptError as err:
+        print(err)
+        printHelp()
+        sys.exit(2)
+    output = None
+    verbose = False
+    for o, a in opts:
+        if o == "-l":
+            loadBudget(a)
+        elif o in "-c":
+            calcBudget(a)
+        elif o in ("-h", "--help"):
+            printHelp()
+
+
+def calcBudget(budget):
     print("Welcome to John's Simple Budget. Please note that in rent I have bundled "
           "water, trash, and sewage as that is how my personal situation is set up.\n")
 
+    budget = budget
     income = int(input("Enter your total monthly income: "))
 
     rent = int(input("Enter your monthly rent: "))
@@ -37,13 +55,19 @@ def calcBudget():
     else:
         print("Congratulations, you can afford your rent!")
 
-    with open('budget.json', 'w') as fp:
+    with open('{0}.json'.format(budget), 'w') as fp:
         json.dump(expenses, fp, indent=4, sort_keys=True)
 
-# TODO have options to load a budget, save a budget
 
-# TODO have option to export to .tsv 
+# Prints a previously made budget for checking
+def loadBudget(jsonbudget):
+    with open(jsonbudget, 'r') as file:
+        data= json.load(file)
+    for l in data['budget']:
+        print(l)
 
 
+def printHelp():
+    print("-l to load a budget \n-c to calculate a new budget \n -h to print help")
 if __name__ == '__main__':
-    calcBudget()
+    main()
