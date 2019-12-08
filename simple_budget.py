@@ -1,26 +1,21 @@
+#!/bin/python
 import sys
 import json
 import getopt
-
+import argparse
 
 def main():
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hlc:v]", ["help"])
-    except getopt.GetoptError as err:
-        print(err)
-        printHelp()
-        sys.exit(2)
-    output = None
-    verbose = False
-    for o, a in opts:
-        if o == "-l":
-            loadBudget(a)
-        elif o in "-c":
-            calcBudget(a)
-        elif o in ("-h", "--help"):
-            printHelp()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c",dest="calc", help="useage: simple_budget -c [BUDGET NAME]")
+    parser.add_argument("-l",dest="load", help="useage: simple_budget -l [BUDGET NAME]")
+    args = parser.parse_args()
+  
+    if args.calc:
+        calcBudget(args.calc)
+    elif args.load:
+        loadBudget(args.load)
 
-
+# Function to go through the budget prompt
 def calcBudget(budget):
     print("Welcome to John's Simple Budget. Please note that in rent I have bundled "
           "water, trash, and sewage as that is how my personal situation is set up.\n")
@@ -36,17 +31,16 @@ def calcBudget(budget):
     charity = int(input("Enter your monthly charity donations: "))
     save = int(input("Enter your monthly savings: "))
     grocmonth = groc * 4
-    expenses = {'rent': rent, 'electric': electric, 'internet': internet, 'debt': debt, 'charity': charity,
-                'groceries': grocmonth, 'savings':save}
-    #
-    # TODO: Daily/weekly allowance
-    # Leftover money, to use as desired. Will factor into a daily allowance later
-    #
+    
+    # Calculate leftover money and provide leftover per month and per day
     leftover = income - (rent + electric + internet + debt + groc + charity)
     leftday = leftover / 30
 
-    leftovers = [leftover, leftday]
+    # Add all expenses and leftovers to a dict for easy json dumping
+    expenses = {'rent': rent, 'electric': electric, 'internet': internet, 'debt': debt, 'charity': charity,
+            'groceries': grocmonth, 'savings':save, 'Leftover': leftover, 'Leftover per day': leftday}
 
+    # Check if you can afford your rent by the standard metric of it being 1/3rd of your income
     affrent = income * .33
 
     if affrent > rent:
@@ -55,19 +49,18 @@ def calcBudget(budget):
     else:
         print("Congratulations, you can afford your rent!")
 
+    # Dump all the stuff we just acuired into a json file for ease of reading later
     with open('{0}.json'.format(budget), 'w') as fp:
         json.dump(expenses, fp, indent=4, sort_keys=True)
 
-
-# Prints a previously made budget for checking
-def loadBudget(jsonbudget):
-    with open(jsonbudget, 'r') as file:
-        data= json.load(file)
-    for l in data['budget']:
-        print(l)
-
+# Function to read from another budget json file
+def loadBudget(budget):
+    with open('{0}.json'.format(budget)) as f:
+        data = json.load(f)
+    print(data)
 
 def printHelp():
-    print("-l to load a budget \n-c to calculate a new budget \n -h to print help")
+    print("-l to load a budget \n-c to calculate a new budget \n-h to print help")
+
 if __name__ == '__main__':
     main()
