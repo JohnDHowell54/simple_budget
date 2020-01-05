@@ -49,6 +49,19 @@ def calcBudget(budget):
     else:
         print("Congratulations, you can afford your rent!")
 
+    print("Do you have any other expenses? Such as gym, Netflix, etc.: ")
+    ans = input()
+
+    if ans == 'y':
+        while True:
+            exp = input("Enter the name of the expense: ")
+            amnt = int(input("Enter the amount: "))
+            expenses.update({exp:amnt})
+
+            more = input("Anymore? ")
+            if more == 'n':
+                break
+        
     # Dump all the stuff we just acuired into a json file for ease of reading later
     with open('{0}.json'.format(budget), 'w') as fp:
         json.dump(expenses, fp, indent=4, sort_keys=True)
@@ -58,9 +71,6 @@ def loadBudget(budget):
     with open('{0}.json'.format(budget)) as f:
         data = json.load(f)
     print(data)
-
-def printHelp():
-    print("-l to load a budget \n-c to calculate a new budget \n-h to print help")
 
 if __name__ == '__main__':
     main()
